@@ -17,6 +17,8 @@ sealed trait WidgetInfo[-Stx]:
   def moveTo(i:Int): WidgetInfo[Stx] = {location = i; this}
 
 object WidgetInfo:
+  case class Server[Stx](mkRequest:Stx=>String)
+    extends WidgetInfo[Stx]
   case class Visualize[Stx,S](v:S=>View, typ:ViewType, pre:Stx=>S)
     extends WidgetInfo[Stx]
   case class VisualizeAll[Stx,S](v:Seq[(String,S)]=>View, typ:ViewType, pre:Stx=>S)

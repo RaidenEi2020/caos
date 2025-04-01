@@ -1,6 +1,6 @@
 package caos.frontend
 
-import widgets.{CodeWidget, DomElem, DomNode, ExampleWidget, Invisible, OutputArea, SimulateMermaid, SimulateText, Tabs, Utils, VisualiseCode, VisualiseMermaid, VisualiseOptMermaid, VisualiseText, Widget, WidgetInfo}
+import widgets.{ServerWidget ,CodeWidget, DomElem, DomNode, ExampleWidget, Invisible, OutputArea, SimulateMermaid, SimulateText, Tabs, Utils, VisualiseCode, VisualiseMermaid, VisualiseOptMermaid, VisualiseText, Widget, WidgetInfo}
 import WidgetInfo.*
 import caos.view.*
 import caos.view.OptionView.*
@@ -111,6 +111,7 @@ object Site:
                               doc: Documentation
                              ): Widget[Unit] =
     try w._2 match {
+      case Server(mkRequest) => new ServerWidget(()=>mkRequest(get()), w._1, out, doc) 
       case Visualize(view,Mermaid,pre) => new VisualiseMermaid(()=>view(pre(get())),w._1,out,doc)
       case Visualize(view,Text,pre) => new VisualiseText(()=>view(pre(get())),w._1,out,doc)
       case Visualize(view,Code(lang),pre) => new VisualiseCode(()=>view(pre(get())),w._1,lang,out,doc)

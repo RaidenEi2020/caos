@@ -46,6 +46,9 @@ trait Configurator[Stx]:
  * Provides functions that produce WidgetInfos, which describe widgets.
  */
 object Configurator:
+  
+  def server[Stx](mkRequest:Stx=>String):WidgetInfo[Stx] =
+    Server[Stx](mkRequest)
 
   /**
    * Generates a WidgetInfo that displays a view of the input program as text or a Mermaid diagram.
