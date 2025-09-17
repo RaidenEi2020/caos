@@ -1,6 +1,6 @@
 package caos.frontend
 
-import widgets.{ServerWidget ,CodeWidget, DomElem, DomNode, ExampleWidget, Invisible, OutputArea, SimulateMermaid, SimulateText, Tabs, Utils, VisualiseCode, VisualiseMermaid, VisualiseOptMermaid, VisualiseText, Widget, WidgetInfo}
+import widgets.{CodeWidget, DomElem, DomNode, ExampleWidget, Invisible, OutputArea, RemoteVisualizeText, SimulateMermaid, SimulateText, Tabs, Utils, VisualiseCode, VisualiseMermaid, VisualiseOptMermaid, VisualiseText, Widget, WidgetInfo}
 import WidgetInfo.*
 import caos.view.*
 import caos.view.OptionView.*
@@ -111,7 +111,6 @@ object Site:
                               doc: Documentation
                              ): Widget[Unit] =
     try w._2 match {
-      case Server(mkRequest) => new ServerWidget(()=>mkRequest(get()), w._1, out, doc) 
       case Visualize(view,Mermaid,pre) => new VisualiseMermaid(()=>view(pre(get())),w._1,out,doc)
       case Visualize(view,Text,pre) => new VisualiseText(()=>view(pre(get())),w._1,out,doc)
       case Visualize(view,Code(lang),pre) => new VisualiseCode(()=>view(pre(get())),w._1,lang,out,doc)
@@ -136,6 +135,8 @@ object Site:
       case Explore(init,sos,vS,vA) => new widgets.Explore(()=>init(get()),sos,vS,vA,w._1,out,doc)
       case Analyse(a) =>
         new Invisible[Stx,Unit](get, stx =>  (a(stx),Nil,()),w._1)
+      case VisualizeRemote(buildCommands, generateHtml, remember) =>
+        new RemoteVisualizeText(()=>buildCommands(get()), generateHtml, remember, w._1,out,doc)
       case _ => throw new RuntimeException(s"case not covered when compiling widget '${w._1}': ${w._2}")
     } catch {
       case e: Throwable =>
@@ -242,9 +243,9 @@ object Site:
 
       override def reload(): Unit =
         descriptionArea.clear()
-        update()
+        update() // update 'get' value
         //out.clear() // now already in globalReload()
-        globalReload()
+        globalReload() // run 'update' on all widgets
     }
 
 //  @JSExportTopLevel("loadedFile")

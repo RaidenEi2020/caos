@@ -46,9 +46,6 @@ trait Configurator[Stx]:
  * Provides functions that produce WidgetInfos, which describe widgets.
  */
 object Configurator:
-  
-  def server[Stx](mkRequest:Stx=>String):WidgetInfo[Stx] =
-    Server[Stx](mkRequest)
 
   /**
    * Generates a WidgetInfo that displays a view of the input program as text or a Mermaid diagram.
@@ -59,6 +56,11 @@ object Configurator:
    */
   def view[Stx](viewProg:Stx=>String, typ:ViewType): WidgetInfo[Stx] =
     Visualize[Stx,Stx](x=>View(viewProg(x)),typ, x=>x)
+
+  def viewRemote[Stx](buildCommands: Stx => List[(String, String)], generateHtml: String => String,
+                      remember: Boolean = false): WidgetInfo[Stx] = 
+    VisualizeRemote[Stx](buildCommands, generateHtml, remember)
+  
 
   /**
    * Generates a WidgetInfo similar to `view`, but applied to all examples from the Example's widget.
