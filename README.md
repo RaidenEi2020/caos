@@ -6,7 +6,7 @@ This is a version of CAOS with an extension that allows the execution of command
 
 - Scala version 3
 - Scala Build Tool (sbt)
-- Java Runtime Environment
+- Java Runtime Environment (JRE)
 
 
 ## How to compile
