@@ -15,5 +15,3 @@ To compile, run the following command:
 
 ```bash
 sbt fastLinkJS
-
-
